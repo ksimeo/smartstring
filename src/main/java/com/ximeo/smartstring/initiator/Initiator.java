@@ -15,11 +15,27 @@ import java.util.Set;
 
 
 public class Initiator {
+
+    private static final String TAG_GREETING = "hello";
+    private static final String TAG_STATE_OF_AFFAIRS = "routine";
+    private static final String TAG_EXCHANGE_RATE = "currency";
+    private static final String TAG_DATE = "date";
+    private static final String TAG_WEATHER = "weather";
+    private static final String TAG_TIME = "time";
+    private static final String TAG_PARTING = "bye";
+
+    private static final String COMMAND_SAY_WEATHER = "weather";
+    private static final String COMMAND_SAY_GREETING = "hello";
+    private static final String COMMAND_SAY_HOW_YOU_ARE = "routine";
+    private static final String COMMAND_SAY_CURRENCY = "currency";
+    private static final String COMMAND_SAY_CURRENT_TIME = "time";
+    private static final String COMMAND_SAY_CURRENT_DATE = "date";
+    private static final String COMMAND_SAY_GOODBYE = "bye";
+
     private Random random = new Random();
 
     public static void main(String[] args) {
         Initiator actions = new Initiator();
-//        actions.sayHello();
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -30,29 +46,12 @@ public class Initiator {
                     question += scanner.next();
                     if (question.endsWith(".") || question.endsWith("?") || question.endsWith("!")) isTheLastWordInTheQuestion = true;
                 }
-//                System.out.println(question);
-//                actions.defineCommandName(actions.doLexicalAnalysys(question));
-//                actions.getCommand(question);
-//                actions.commandDispatcher(actions.interpretateToCommandName(question));
                 actions.commandDispatcher(actions.getCommand(question));
             } catch (Exception ex) {
                 System.out.println("Извините, произошла непредвиденная ситуация");
                 ex.printStackTrace();
             }
         }
-    }
-
-    private String interpretateToCommandName(String str) {
-        return getCommandName(str);
-    }
-
-    private List<String> parseAString(String aString) {
-        String[] res = aString.split(" ");
-        List<String> toSend = new ArrayList<>();
-        for (String a : res) {
-            toSend.add(a.toLowerCase());
-        }
-        return toSend;
     }
 
     private void commandDispatcher(String commandName) {
@@ -126,28 +125,6 @@ public class Initiator {
         System.exit(0);
     }
 
-    private String defineCommandName(Set<String> tags) {
-        Map<Set<String>, String> lexems = getTagsMap();
-        Set<Map.Entry<Set<String>, String>> sddffs = lexems.entrySet();
-        for (Map.Entry<Set<String>, String> str : sddffs) {
-            Set<String> sets = str.getKey();
-            for (String st : sets) {
-                if(tags.contains(st)) return str.getValue();
-            }
-        }
-        return "";
-    }
-
-    private Set<String> doLexicalAnalysys(String sentense) {
-        Set<String> tags = getTags();
-        Set<String> toSend = new HashSet<>();
-        sentense = sentense.toLowerCase();
-        for (String tag : tags) {
-            if (sentense.contains(tag)) toSend.add(tag);
-        }
-        return toSend;
-    }
-
     private Set<String> getTags() {
         Set<String> toSend = new HashSet<>();
         toSend.add(TOKEN_HELLO_1);
@@ -188,26 +165,8 @@ public class Initiator {
     private static final String TOKEN_TIME_1 = "врем";
     private static final String TOKEN_TIME_2 = "час";
 
-
-    private String getCommandName(String str) {
-//        System.err.println(str);
-        Map<Set<String>, String> sdf = getTagsMap();
-        Set<Map.Entry<Set<String>, String>> cbcb = sdf.entrySet();
-        for (Map.Entry<Set<String>, String> ab : cbcb) {
-            Set<String> s1 = ab.getKey();
-            for (String ss : s1) {
-//                System.err.println(str + " == " + ss + " : " + str.equalsIgnoreCase(ss));
-                if (str.equalsIgnoreCase(ss)) {
-                    return ab.getValue();
-                }
-            }
-        }
-        return "";
-    }
-
     private String getCommand(String ssss) {
         Set<String> strs = getTagsSet(ssss);
-        System.err.println(strs.size());
         Map<Set<String>, String> mapa = getCommandMap();
         Set<Map.Entry<Set<String>, String>> st = mapa.entrySet();
         Map<Set<String>, String> ss = new HashMap<>();
@@ -234,35 +193,18 @@ public class Initiator {
 
     private Set<String> getTagsSet(String str) {
         Map<Set<String>, String> sdf = getTagsMap();
-        System.err.println(sdf);
         Set<Map.Entry<Set<String>, String>> cbcb = sdf.entrySet();
         Set<String> toSend = new HashSet<>();
         for (Map.Entry<Set<String>, String> ab : cbcb) {
             Set<String> s1 = ab.getKey();
             for (String ss : s1) {
-                if (str.contains(ss)) {
+                if (str.toLowerCase().contains(ss)) {
                     toSend.add(ab.getValue());
                 }
             }
         }
         return toSend;
     }
-
-    private static final String TAG_GREETING = "hello";
-    private static final String TAG_STATE_OF_AFFAIRS = "routine";
-    private static final String TAG_EXCHANGE_RATE = "currency";
-    private static final String TAG_DATE = "date";
-    private static final String TAG_WEATHER = "weather";
-    private static final String TAG_TIME = "time";
-    private static final String TAG_PARTING = "bye";
-
-    private static final String COMMAND_SAY_WEATHER = "weather";
-    private static final String COMMAND_SAY_GREETING = "hello";
-    private static final String COMMAND_SAY_HOW_YOU_ARE = "routine";
-    private static final String COMMAND_SAY_CURRENCY = "currency";
-    private static final String COMMAND_SAY_CURRENT_TIME = "time";
-    private static final String COMMAND_SAY_CURRENT_DATE = "date";
-    private static final String COMMAND_SAY_GOODBYE = "bye";
 
     private Map<Set<String>, String> getCommandMap() {
         Map<Set<String>, String> commandMap = new HashMap<>();
@@ -288,50 +230,6 @@ public class Initiator {
         tagsMap.put(Set.of(TOKEN_BYE_1, TOKEN_BYE_2, TOKEN_BYE_3), TAG_PARTING);
         return tagsMap;
     }
-
-//    private Map<Set<String>, String> getCommandMap() {
-//        Map<Set<String>, String> commandMap = new HashMap<>();
-//        Set<String> str0 = new HashSet<>();
-//        str0.add("привет!");
-//        str0.add("здравствуй!");
-//        str0.add("hello!");
-//        str0.add("hi!");
-//        str0.add("хай!");
-//        str0.add("здорова!");
-//        commandMap.put(str0, "hello");
-//        Set<String> str1 = new HashSet<>();
-//        str1.add("как дела?");
-//        str1.add("как оно?");
-//        str1.add("как ты?");
-//        commandMap.put(str1, "routine");
-//        Set<String> str2 = new HashSet<>();
-//        str2.add("какая погода?");
-//        commandMap.put(str2, "weather");
-//        Set<String> str3 = new HashSet<>();
-//        str3.add("какой курс сегодня?");
-//        str3.add("сколько стоит доллар?");
-//        str3.add("по чем нынче бакс?");
-//        commandMap.put(str3, "currency");
-//        Set<String> str4 = new HashSet<>();
-//        str4.add("какое число сегодня?");
-//        str4.add("какое сегодня число?");
-//        commandMap.put(str4, "date");
-//        Set<String> str5 = new HashSet<>();
-//        str5.add("сколько времени?");
-//        str5.add("который час?");
-//        str5.add("какое время сейчас?");
-//        commandMap.put(str5, "time");
-//        Set<String> str6 = new HashSet<>();
-//        str6.add("прощай!");
-//        str6.add("Прощай!");
-//        str6.add("Аривидерчи!");
-//        str6.add("Чао!");
-//        str6.add("До встречи!");
-//        str6.add("Гудбай!");
-//        str6.add("До свидания!");
-//        commandMap.put(str6, "bye");
-//        return commandMap;
-//    }
 
     private Map<String, Set<String>> getAnswers() {
         Map<String, Set<String>> answersMap = new HashMap<>();
